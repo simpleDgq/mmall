@@ -9,6 +9,9 @@ import java.io.Serializable;
 //保证序列化json的时候,如果是null的对象,key也会消失.
 // 例如，只返回status和msg的时候，data是null，如果不加这个注解，
 // 序列化的json中会有一个名为data的key，但是值是null。加了这个注解就可以在data是null的时候消除data的序列化。
+/**
+ * 返回给客户端的响应对象
+ */
 public class ServerResponse<T> implements Serializable {
 
     private int status;

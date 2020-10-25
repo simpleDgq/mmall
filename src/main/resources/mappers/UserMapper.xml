@@ -151,4 +151,15 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="checkUserName" resultType="int" parameterType="string">
+    select count(1) from mmall_user where username = #{userName} <!--使用#号可以防止sql注入 -->
+  </select>
+
+  <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
+    select Base_Column_List
+    from mmall_user
+    where username= #{userName}
+    and password = #{passWord}
+  </select>
 </mapper>
