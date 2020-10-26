@@ -2,6 +2,7 @@ package com.mmall.service.impl;
 
 import com.mmall.common.Const;
 import com.mmall.common.ServerResponse;
+import com.mmall.common.TokenCache;
 import com.mmall.dao.UserMapper;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
@@ -9,6 +10,8 @@ import com.mmall.util.MD5Util;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service("iUserService")
 // 组件扫描的时候，发现这个@Service注解，会在Spring容器中自动创建一个该类的对象。括号里面的内容
@@ -106,6 +109,27 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createBySuccess(question);
         }
         return ServerResponse.createByErrorMessage("找回密码的问题是空");
+    }
+
+    /**
+     * 检查找回密码问题的答案是否正确
+     *
+     * @param userName
+     * @param question
+     * @param answer
+     * @return
+     */
+    @Override
+    public ServerResponse<String> checkAnswer(String userName, String question, String answer) {
+        int resCount = userMapper.checkAnswer(userName, question, answer);
+        if(resCount > 0) {
+            // 用户名，question和answer都正确，生成token，放入缓存
+            String forgetToken = UUID.randomUUID().toString();
+            // 往本地缓存中放入token
+            TokenCache.setKey("token_" + userName, forgetToken);
+            return ServerResponse.createBySuccessMessage(forgetToken);
+        }
+        return ServerResponse.createByErrorMessage("问题的答案错误");
     }
 
 }

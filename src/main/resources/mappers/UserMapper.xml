@@ -172,4 +172,11 @@
     from mmall_user
     where username= #{userName}
   </select>
+
+  <select id="checkAnswer" resultType="int" parameterType="map">
+    select count(1)
+    where username= #{userName}
+    and question= #{question}
+    and answer= #{answer}
+  </select>
 </mapper>

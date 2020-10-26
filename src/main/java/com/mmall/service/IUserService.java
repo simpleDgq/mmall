@@ -33,4 +33,14 @@ public interface IUserService {
      * @return
      */
     ServerResponse<String> selectQuestion(String userName);
+
+
+    /**
+     * 检查找回密码问题的答案是否正确
+     * @param userName
+     * @param question
+     * @param answer
+     * @return
+     */
+    ServerResponse<String> checkAnswer(String userName, String question, String answer);
 }

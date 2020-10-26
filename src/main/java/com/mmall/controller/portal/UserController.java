@@ -96,4 +96,17 @@ public class UserController {
     public ServerResponse<String> forgetGetQuestion(String userName) {
         return iUserService.selectQuestion(userName);
     }
+
+    /**
+     * 返回用户回答的找回密码问题的答案是否正确
+     * @param userName
+     * @param question
+     * @param answer
+     * @return
+     */
+    @RequestMapping(value = "forget_check_answer.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<String> forgetCheckAnswer(String userName, String question, String answer) {
+        return iUserService.checkAnswer(userName, question, answer);
+    }
 }
