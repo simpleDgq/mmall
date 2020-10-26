@@ -126,10 +126,46 @@ public class UserServiceImpl implements IUserService {
             // 用户名，question和answer都正确，生成token，放入缓存
             String forgetToken = UUID.randomUUID().toString();
             // 往本地缓存中放入token
-            TokenCache.setKey("token_" + userName, forgetToken);
+            TokenCache.setKey(TokenCache.TOKEN_PREFIX + userName, forgetToken);
             return ServerResponse.createBySuccessMessage(forgetToken);
         }
         return ServerResponse.createByErrorMessage("问题的答案错误");
+    }
+
+    /**
+     * 忘记密码重置密码
+     *
+     * @param userName
+     * @param passwordNew
+     * @param forgetToken
+     * @return
+     */
+    @Override
+    public ServerResponse<String> forgetResetPassword(String userName, String passwordNew, String forgetToken) {
+        if(StringUtils.isBlank(forgetToken)) {
+            return ServerResponse.createByErrorMessage("参数错误，参数需要传递");
+        }
+        // 检查用户名是否存在
+        ServerResponse validResponse = checkValid(userName, Const.USERNAME);
+        if(validResponse.isSuccess()) {
+            return ServerResponse.createByErrorMessage("用户名不存在");
+        }
+        // 检查token是否存在
+        String token = TokenCache.getKey(TokenCache.TOKEN_PREFIX + userName);
+        if(StringUtils.isBlank(token)) {
+            return ServerResponse.createByErrorMessage("Token无效或者过期");
+        }
+        // 如果缓存中的token和传过来的forgetToken相等，则校验通过
+        if(StringUtils.equals(token, forgetToken)) {
+            String md5Password = MD5Util.MD5EncodeUtf8(passwordNew);
+            int rowCount = userMapper.updatePasswordByUserName(userName, md5Password);
+            if(rowCount > 0) {
+                return ServerResponse.createBySuccessMessage("修改密码成功");
+            }
+        } else {
+            return ServerResponse.createByErrorMessage("Token错误，请重新获取重置密码的token");
+        }
+        return ServerResponse.createBySuccessMessage("修改密码失败");
     }
 
 }

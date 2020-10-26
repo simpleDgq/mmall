@@ -54,4 +54,13 @@ public interface UserMapper {
      * @return
      */
     int checkAnswer(@Param("userName")String userName, @Param("question")String question, @Param("answer")String answer);
+
+    /**
+     * 忘记密码重置密码
+     *
+     * @param userName
+     * @param passwordNew
+     * @return
+     */
+    int updatePasswordByUserName(@Param("userName")String userName, @Param("passwordNew")String passwordNew);
 }

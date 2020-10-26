@@ -12,6 +12,9 @@ import java.util.concurrent.TimeUnit;
 public class TokenCache {
 
     private static Logger logger = LoggerFactory.getLogger(TokenCache.class);
+
+    public static final String TOKEN_PREFIX = "token_";
+
     //maximumSize设置最大缓存量，当超过这个值的时候，会使用LRU算法清除缓存
     private static LoadingCache<String, String> localCache = CacheBuilder.newBuilder().initialCapacity(1000)
             .maximumSize(10000).expireAfterAccess(12, TimeUnit.HOURS).build(new CacheLoader<String, String>() {
