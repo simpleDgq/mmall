@@ -26,4 +26,11 @@ public interface IUserService {
      * @return
      */
     ServerResponse<String> checkValid(String str, String type);
+
+    /**
+     * 忘记密码，返回找回密码的问题
+     * @param userName
+     * @return
+     */
+    ServerResponse<String> selectQuestion(String userName);
 }
