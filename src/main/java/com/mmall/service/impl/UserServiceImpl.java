@@ -1,9 +1,11 @@
 package com.mmall.service.impl;
 
+import com.mmall.common.Const;
 import com.mmall.common.ServerResponse;
 import com.mmall.dao.UserMapper;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
+import com.mmall.util.MD5Util;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class UserServiceImpl implements IUserService {
     private UserMapper userMapper;
 
     @Override
+    /**
+     * 登录
+     */
     public ServerResponse<User> login(String userName, String passWord) {
 
         int resCount = userMapper.checkUserName(userName);
@@ -24,14 +29,38 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createByErrorMessage("用户名不存在");
         }
 
-        // TODO 密码登录MD5
-
-        User user = userMapper.selectLogin(userName, passWord);
+        String md5Password = MD5Util.MD5EncodeUtf8(passWord);
+        User user = userMapper.selectLogin(userName, md5Password);
         if(user == null) {
             return ServerResponse.createByErrorMessage("密码错误");
         }
         user.setPassword(StringUtils.EMPTY);
         return ServerResponse.createBySuccess("登录成功", user);
 
+    }
+
+    @Override
+    /**
+     * 注册
+     */
+    public ServerResponse<String> register(User user) {
+        int resCount = userMapper.checkUserName(user.getUsername());
+        if(resCount > 0) {
+            return ServerResponse.createByErrorMessage("用户名已存在");
+        }
+
+        resCount = userMapper.checkEmail(user.getEmail());
+        if(resCount > 0) {
+            return ServerResponse.createByErrorMessage("邮箱已存在");
+        }
+
+        user.setRole(Const.Role.ROLE_CUSTOMER); // 设置权限为普通用户
+        //对密码MD5加密，然后存入数据库
+        user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
+        resCount = userMapper.insert(user);
+        if (resCount == 0) {
+            ServerResponse.createByErrorMessage("注册失败");
+        }
+        return ServerResponse.createBySuccessMessage("注册成功");
     }
 }

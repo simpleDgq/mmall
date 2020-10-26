@@ -24,6 +24,13 @@ public interface UserMapper {
     int checkUserName(String userName);
 
     /**
+     * 检查email是否存在
+     * @param email
+     * @return
+     */
+    int checkEmail(String email);
+
+    /**
      * 用户登录成功，返回用户的详细信息
      * @param userName
      * @param passWord

@@ -4,7 +4,6 @@ import com.mmall.common.Const;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
-import com.mmall.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +33,28 @@ public class UserController {
             session.setAttribute(Const.CURRENT_USER, response.getData());
         }
         return response;
+    }
+
+    /**
+     * 退出登录
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "loginOut.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<String> loginOut(HttpSession session) {
+        session.removeAttribute(Const.CURRENT_USER);
+        return ServerResponse.createBySuccess();
+    }
+
+    /**
+     * 注册
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "register.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<String> register(User user) {
+        return  iUserService.register(user);
     }
 }
