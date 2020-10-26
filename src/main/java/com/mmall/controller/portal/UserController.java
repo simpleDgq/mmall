@@ -57,4 +57,16 @@ public class UserController {
     public ServerResponse<String> register(User user) {
         return  iUserService.register(user);
     }
+
+    /**
+     * 检查参数是否有效
+     * @param str
+     * @param type
+     * @return
+     */
+    @RequestMapping(value = "checkValid.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<String> checkValid(String str, String type) {
+        return iUserService.checkValid(str, type);
+    }
 }

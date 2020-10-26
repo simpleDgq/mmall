@@ -44,23 +44,48 @@ public class UserServiceImpl implements IUserService {
      * 注册
      */
     public ServerResponse<String> register(User user) {
-        int resCount = userMapper.checkUserName(user.getUsername());
-        if(resCount > 0) {
-            return ServerResponse.createByErrorMessage("用户名已存在");
-        }
 
-        resCount = userMapper.checkEmail(user.getEmail());
-        if(resCount > 0) {
-            return ServerResponse.createByErrorMessage("邮箱已存在");
+        ServerResponse<String> ValidResponse = checkValid(user.getUsername(), Const.USERNAME);
+        if(!ValidResponse.isSuccess()) {
+            return ValidResponse;
         }
-
+        ValidResponse = checkValid(user.getEmail(), Const.EMAIL);
+        if(!ValidResponse.isSuccess()) {
+            return ValidResponse;
+        }
         user.setRole(Const.Role.ROLE_CUSTOMER); // 设置权限为普通用户
         //对密码MD5加密，然后存入数据库
         user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
-        resCount = userMapper.insert(user);
+        int resCount = userMapper.insert(user);
         if (resCount == 0) {
             ServerResponse.createByErrorMessage("注册失败");
         }
         return ServerResponse.createBySuccessMessage("注册成功");
+    }
+
+    @Override
+    /**
+     * 检查参数是否有效
+     */
+    public ServerResponse<String> checkValid(String str, String type) {
+        if(StringUtils.isNotBlank(type)) {
+            int resCount = 0;
+            if(Const.USERNAME.equals(type)) {
+                resCount = userMapper.checkUserName(str);
+                if(resCount > 0) {
+                    return ServerResponse.createByErrorMessage("用户名已存在");
+                }
+            }
+            if(Const.EMAIL.equals(type)) {
+                resCount = userMapper.checkEmail(str);
+                if(resCount > 0) {
+                    return ServerResponse.createByErrorMessage("邮箱已存在");
+                }
+            }
+        } else {
+            ServerResponse.createByErrorMessage("type类型不正确");
+        }
+
+        return ServerResponse.createBySuccessMessage("校验成功");
     }
 }

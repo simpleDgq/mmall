@@ -18,4 +18,12 @@ public interface IUserService {
      * @return
      */
     ServerResponse<String> register(User user);
+
+    /**
+     * 检查参数是否有效
+     * @param str
+     * @param type
+     * @return
+     */
+    ServerResponse<String> checkValid(String str, String type);
 }
