@@ -84,7 +84,7 @@ public class ServerResponse<T> implements Serializable {
      * @param <T>
      * @return
      */
-    public static <T> ServerResponse<T> createBySuccessMessage(T data) {
+    public static <T> ServerResponse<T> createBySuccess(T data) {
         return new ServerResponse<T>(ResponseCode.SUCCESS.getCode(), data);
     }
 
