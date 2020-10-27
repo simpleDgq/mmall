@@ -49,10 +49,12 @@ public class UserServiceImpl implements IUserService {
      */
     public ServerResponse<String> register(User user) {
 
+        // 检查用户名是否已经存在
         ServerResponse<String> ValidResponse = checkValid(user.getUsername(), Const.USERNAME);
         if(!ValidResponse.isSuccess()) {
             return ValidResponse;
         }
+        // 检查email是否已经存在
         ValidResponse = checkValid(user.getEmail(), Const.EMAIL);
         if(!ValidResponse.isSuccess()) {
             return ValidResponse;

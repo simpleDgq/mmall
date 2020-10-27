@@ -176,7 +176,7 @@ public class UserController {
     public ServerResponse<User> getUserInformation(HttpSession session) {
         User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
         if(currentUser == null) {
-            ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，需要强制登录status=10");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，需要强制登录status=10");
         }
         return iUserService.getUserInformation(currentUser.getId());
     }
