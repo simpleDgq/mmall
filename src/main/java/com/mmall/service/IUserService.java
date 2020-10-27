@@ -3,6 +3,9 @@ package com.mmall.service;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
 
+import javax.jws.soap.SOAPBinding;
+import javax.servlet.http.HttpSession;
+
 public interface IUserService {
     /**
      * 登录
@@ -52,4 +55,13 @@ public interface IUserService {
      * @return
      */
     ServerResponse<String> forgetResetPassword(String userName, String passwordNew, String forgetToken);
+
+    /**
+     * 登录状态下的重置密码
+     * @param passwordNew
+     * @param passwordOld
+     * @param user
+     * @return
+     */
+    ServerResponse<String> resetPassword(String passwordNew, String passwordOld, User user);
 }

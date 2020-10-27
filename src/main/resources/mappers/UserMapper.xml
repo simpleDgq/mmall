@@ -175,6 +175,7 @@
 
   <select id="checkAnswer" resultType="int" parameterType="map">
     select count(1)
+    from mmall_user
     where username= #{userName}
     and question= #{question}
     and answer= #{answer}
@@ -185,4 +186,11 @@
     set password = #{passwordNew}, update_time= now()
     where userName= #{userName}
   </update>
+
+  <select id="checkPassword" resultType="int" parameterType="map">
+    select count(1)
+    from mmall_user
+    where id= #{userId}
+    and password= #{passwordOld}
+  </select>
 </mapper>

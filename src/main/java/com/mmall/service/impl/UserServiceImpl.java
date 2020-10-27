@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 @Service("iUserService")
@@ -166,6 +167,32 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createByErrorMessage("Token错误，请重新获取重置密码的token");
         }
         return ServerResponse.createBySuccessMessage("修改密码失败");
+    }
+
+    /**
+     * 登录状态下的重置密码
+     *
+     * @param passwordNew
+     * @param passwordOld
+     * @param user
+     * @return
+     */
+    @Override
+    public ServerResponse<String> resetPassword(String passwordNew, String passwordOld, User user) {
+        //防止横向越权,要校验一下这个用户的旧密码是不是正确的,同时一定要指定是这个用户.因为我们会查询一个count(1),如果不指定id,那么即使不是属于
+        // 当前用户的password，但是与指定的passwordOld相等，也会导致结果就是true(count>0;)
+        int resCount = userMapper.checkPassword(MD5Util.MD5EncodeUtf8(passwordOld), user.getId());
+        if(resCount == 0) {
+            return ServerResponse.createByErrorMessage("旧密码错误");
+        }
+
+        user.setPassword(MD5Util.MD5EncodeUtf8(passwordNew));
+        // 更新密码
+        resCount = userMapper.updateByPrimaryKeySelective(user);
+        if(resCount > 0) {
+            return ServerResponse.createBySuccessMessage("重置密码成功");
+        }
+        return ServerResponse.createByErrorMessage("重置密码失败");
     }
 
 }

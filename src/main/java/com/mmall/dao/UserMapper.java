@@ -63,4 +63,12 @@ public interface UserMapper {
      * @return
      */
     int updatePasswordByUserName(@Param("userName")String userName, @Param("passwordNew")String passwordNew);
+
+    /**
+     * 检查指定的userId下，指定的旧密码是不是正确的
+     * @param passwordOld
+     * @param userId
+     * @return
+     */
+    int checkPassword(@Param("passwordOld")String passwordOld, @Param("userId")int userId);
 }
