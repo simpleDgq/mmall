@@ -71,4 +71,12 @@ public interface UserMapper {
      * @return
      */
     int checkPassword(@Param("passwordOld")String passwordOld, @Param("userId")int userId);
+
+    /**
+     * 检查当前用户对应的email在数据库中是否重复
+     * @param email
+     * @param userId
+     * @return
+     */
+    int checkEmailByUserId(@Param("email")String email, @Param("userId")int userId);
 }

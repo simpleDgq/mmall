@@ -193,4 +193,11 @@
     where id= #{userId}
     and password= #{passwordOld}
   </select>
+
+  <select id="checkEmailByUserId" resultType="int" parameterType="map">
+    select count(1)
+    from mmall_user
+    where id!= #{userId}
+    and email= #{email}
+  </select>
 </mapper>

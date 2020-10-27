@@ -181,7 +181,7 @@ public class UserServiceImpl implements IUserService {
     public ServerResponse<String> resetPassword(String passwordNew, String passwordOld, User user) {
         //防止横向越权,要校验一下这个用户的旧密码是不是正确的,同时一定要指定是这个用户.因为我们会查询一个count(1),如果不指定id,那么即使不是属于
         // 当前用户的password，但是与指定的passwordOld相等，也会导致结果就是true(count>0;)
-        int resCount = userMapper.checkPassword(MD5Util.MD5EncodeUtf8(passwordOld), user.getId());
+        int resCount = userMapper.checkPassword(MD5Util.MD5EncodeUtf8(passwordOld), user.getId()); //检查旧密码是否正确
         if(resCount == 0) {
             return ServerResponse.createByErrorMessage("旧密码错误");
         }
@@ -193,6 +193,37 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createBySuccessMessage("重置密码成功");
         }
         return ServerResponse.createByErrorMessage("重置密码失败");
+    }
+
+    /**
+     * 更新用户信息
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    public ServerResponse<User> updateUserInformation(User user) {
+        //username是不能被更新的
+        //email也要进行一个校验,校验新的email是不是已经存在, 并且数据库中存在的email需要不是我们当前的这个用户的
+        // （也就是除了当前用户的其他用户的信息中，不能存在相同的email）.
+        int resCount = userMapper.checkEmailByUserId(user.getEmail(), user.getId());
+        if(resCount > 0) {
+            return ServerResponse.createByErrorMessage("邮箱已经存在，请更换邮箱地址，再尝试更新");
+        }
+        // 更新信息，只更新部分用户信息
+        User updateUser = new User();
+        updateUser.setId(user.getId());
+        updateUser.setEmail(user.getEmail());
+        updateUser.setPhone(user.getPhone());
+        updateUser.setQuestion(user.getQuestion());
+        updateUser.setAnswer(user.getAnswer());
+
+        resCount = userMapper.updateByPrimaryKeySelective(updateUser);
+        if(resCount > 0) {
+            return ServerResponse.createBySuccess("更新用户信息成功", updateUser);
+        }
+        return ServerResponse.createByErrorMessage("更新用户信息失败");
+
     }
 
 }

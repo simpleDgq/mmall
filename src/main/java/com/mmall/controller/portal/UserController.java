@@ -135,9 +135,33 @@ public class UserController {
     @ResponseBody
     public ServerResponse<String> resetPassword(HttpSession session, String passwordNew, String passwordOld) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
-        if(user == null) {
+        if(user == null) { // 检查用户是否登录
             ServerResponse.createByErrorMessage("用户未登录");
         }
         return iUserService.resetPassword(passwordNew, passwordOld, user);
+    }
+
+    /**
+     * 更新用户信息
+     * @param session
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "update_user_information.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> updateUserInformation(HttpSession session, User user) {
+        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        if(currentUser == null) { // 检查用户是否登录
+            ServerResponse.createByErrorMessage("用户未登录");
+        }
+        user.setId(currentUser.getId()); // userId不能被更新，设置userId
+        user.setUsername(currentUser.getUsername()); // userName不能被更新，设置userName
+
+        ServerResponse<User> response = iUserService.updateUserInformation(user);
+        if(response.isSuccess()) { // 需要更新session中的user信息
+            response.getData().setUsername(currentUser.getUsername()); // 返回的response中是没有userName的，需要放进去
+            session.setAttribute(Const.CURRENT_USER, response.getData());
+        }
+        return response;
     }
 }
