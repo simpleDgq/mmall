@@ -23,14 +23,14 @@ public class UserController {
     /**
      * 用户登录
      * @param userName
-     * @param passWord
+     * @param password
      * @param session
      * @return
      */
     @RequestMapping(value = "login.do", method = RequestMethod.POST)
     @ResponseBody // 返回数据的时候使用Spring MVC配置的Jackson将数据转换为JSON
-    public ServerResponse<User> login(String userName, String passWord, HttpSession session) {
-        ServerResponse<User> response = iUserService.login(userName, passWord);
+    public ServerResponse<User> login(String userName, String password, HttpSession session) {
+        ServerResponse<User> response = iUserService.login(userName, password);
         if(response.isSuccess()) {
             session.setAttribute(Const.CURRENT_USER, response.getData());
         }

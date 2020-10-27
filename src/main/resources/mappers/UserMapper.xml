@@ -161,10 +161,11 @@
   </select>
 
   <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
-    select Base_Column_List
+    select
+    <include refid="Base_Column_List" /> <!-- 直接引用 Base_Column_List-->
     from mmall_user
     where username= #{userName}
-    and password = #{passWord}
+    and password = #{password}
   </select>
 
   <select id="selectQuestionByUserName" resultType="string" parameterType="string">

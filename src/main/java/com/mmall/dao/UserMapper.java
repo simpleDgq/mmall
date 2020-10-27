@@ -33,11 +33,11 @@ public interface UserMapper {
     /**
      * 用户登录成功，返回用户的详细信息
      * @param userName
-     * @param passWord
+     * @param password
      * @return
      */
     //多个参数的时候，使用@Param，在sql语句里面使用的时候，需要指定@Param里面指定的值，才能够匹配到
-    User selectLogin(@Param("userName") String userName, @Param("passWord") String passWord);
+    User selectLogin(@Param("userName") String userName, @Param("password") String password);
 
     /**
      * 查找用户找回密码的问题
