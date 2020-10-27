@@ -71,4 +71,11 @@ public interface IUserService {
      * @return
      */
     ServerResponse<User> updateUserInformation(User user);
+
+    /**
+     * 根据userId获取用户详细信息
+     * @param userId
+     * @return
+     */
+    ServerResponse<User> getUserInformation(int userId);
 }

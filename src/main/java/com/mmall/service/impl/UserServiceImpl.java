@@ -226,4 +226,22 @@ public class UserServiceImpl implements IUserService {
 
     }
 
+    /**
+     * 根据userId获取用户详细信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public ServerResponse<User> getUserInformation(int userId) {
+
+        User user = userMapper.selectByPrimaryKey(userId);
+        if(user == null) {
+            return ServerResponse.createByErrorMessage("当前用户不存在");
+        }
+
+        user.setPassword(StringUtils.EMPTY);
+        return ServerResponse.createBySuccess(user);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.mmall.controller.portal;
 
 import com.mmall.common.Const;
+import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
@@ -164,4 +165,20 @@ public class UserController {
         }
         return response;
     }
+
+    /**
+     * 根据userId获取用户详细信息
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "get_user_information.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<User> getUserInformation(HttpSession session) {
+        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        if(currentUser == null) {
+            ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录，需要强制登录status=10");
+        }
+        return iUserService.getUserInformation(currentUser.getId());
+    }
+
 }
