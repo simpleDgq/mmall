@@ -79,4 +79,32 @@ public class CategoryManageController {
         // 更新categoryName
         return  iCategoryService.updateCategoryName(id, categoryName);
     }
+
+
+    /**
+     * 查询子节点的category信息,并且不递归,保持平级
+     * @param session
+     * @param categoryId
+     * @return
+     */
+    @RequestMapping(value = "get_category.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse getChildrenParallelCategory(HttpSession session,@RequestParam(value = "categoryId" ,defaultValue = "0") Integer categoryId){
+
+        // 校验用户是否登录
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
+        }
+
+        // 验证用户权限
+        ServerResponse response = iUserService.checkAdminRole(user);
+        if(!response.isSuccess()) {
+            return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
+        }
+
+        // 查找指定的parentId下面的所有分类信息,并且不递归,保持平级
+        return iCategoryService.getChildrenParallelCategory(categoryId);
+
+    }
 }
