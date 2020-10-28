@@ -11,4 +11,12 @@ public interface ICategoryService {
      * @return
      */
     ServerResponse addCategory(String categoryName, Integer parentId);
+
+    /**
+     * 更新category名字
+     * @param id
+     * @param categoryName
+     * @return
+     */
+    ServerResponse updateCategoryName(Integer id, String categoryName);
 }

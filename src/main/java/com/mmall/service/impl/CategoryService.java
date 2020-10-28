@@ -36,4 +36,30 @@ public class CategoryService implements ICategoryService {
         }
         return ServerResponse.createByErrorMessage("品类添加失败");
     }
+
+    /**
+     * 更新category名字
+     *
+     * @param id
+     * @param categoryName
+     * @return
+     */
+    @Override
+    public ServerResponse updateCategoryName(Integer id, String categoryName) {
+        if(id == null || StringUtils.isBlank(categoryName)) {
+            return ServerResponse.createByErrorMessage("更新品类参数错误");
+        }
+
+        Category category = new Category();
+        category.setId(id);
+        category.setName(categoryName);
+
+        //更新
+        int resCount = categoryMapper.updateByPrimaryKeySelective(category);
+        if(resCount > 0) {
+            return ServerResponse.createBySuccessMessage("更新品类名称成功");
+        }
+        return ServerResponse.createByErrorMessage("更新品类名称失败");
+
+    }
 }
