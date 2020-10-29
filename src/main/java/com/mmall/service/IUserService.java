@@ -7,6 +7,8 @@ import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpSession;
 
 public interface IUserService {
+
+    // User begin
     /**
      * 登录
      * @param userName
@@ -78,4 +80,17 @@ public interface IUserService {
      * @return
      */
     ServerResponse<User> getUserInformation(int userId);
+    // User end
+
+
+    // backend begin
+
+    /**
+     * 校验是否是管理员
+     * @param user
+     * @return
+     */
+    ServerResponse checkAdminRole(User user);
+
+    // backend end
 }

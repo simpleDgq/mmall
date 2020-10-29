@@ -89,7 +89,7 @@ public class UserServiceImpl implements IUserService {
                 }
             }
         } else {
-            ServerResponse.createByErrorMessage("type类型不正确");
+            return ServerResponse.createByErrorMessage("type类型不正确");
         }
 
         return ServerResponse.createBySuccessMessage("校验成功");
@@ -244,6 +244,20 @@ public class UserServiceImpl implements IUserService {
 
         user.setPassword(StringUtils.EMPTY);
         return ServerResponse.createBySuccess(user);
+    }
+
+    /**
+     * 校验是否是管理员
+     *  role 是 1 代表是管理员，0代表普通用户
+     * @param user
+     * @return
+     */
+    @Override
+    public ServerResponse checkAdminRole(User user) {
+        if(user != null && user.getRole().intValue() == Const.Role.ROLE_ADMIN) { // 是管理员
+            return ServerResponse.createBySuccess();
+        }
+        return ServerResponse.createByError(); // 不是管理员
     }
 
 }
