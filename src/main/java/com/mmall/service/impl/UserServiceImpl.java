@@ -89,7 +89,7 @@ public class UserServiceImpl implements IUserService {
                 }
             }
         } else {
-            ServerResponse.createByErrorMessage("type类型不正确");
+            return ServerResponse.createByErrorMessage("type类型不正确");
         }
 
         return ServerResponse.createBySuccessMessage("校验成功");
