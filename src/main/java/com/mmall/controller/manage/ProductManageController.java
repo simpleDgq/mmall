@@ -52,4 +52,30 @@ public class ProductManageController {
         return iProductService.saveOrUpdateProduct(product);
     }
 
+    /**
+     * 设置商品的status
+     *
+     * @param session
+     * @param productId
+     * @param status
+     * @return
+     */
+    @RequestMapping(value = "set_sale_status.do", method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse setSaleStatus(HttpSession session, Integer productId, Integer status) {
+        // 校验用户是否登录
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
+        }
+
+        // 验证用户权限
+        ServerResponse response = iUserService.checkAdminRole(user);
+        if(!response.isSuccess()) {
+            return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
+        }
+
+        return iProductService.setSaleStatus(productId, status);
+    }
+
 }

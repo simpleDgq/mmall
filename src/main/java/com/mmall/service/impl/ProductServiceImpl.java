@@ -1,5 +1,6 @@
 package com.mmall.service.impl;
 
+import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.dao.ProductMapper;
 import com.mmall.pojo.Product;
@@ -21,7 +22,7 @@ public class ProductServiceImpl implements IProductService {
      * @return
      */
     @Override
-    public ServerResponse saveOrUpdateProduct(Product product) {
+    public ServerResponse<String> saveOrUpdateProduct(Product product) {
         if(product != null) {
             if(StringUtils.isNotBlank(product.getSubImages())) {
                 String[] imagesArray = product.getSubImages().split(",");
@@ -45,5 +46,29 @@ public class ProductServiceImpl implements IProductService {
             }
         }
         return ServerResponse.createByErrorMessage("添加或新增商品参数不正确");
+    }
+
+    /**
+     * 设置商品的status信息
+     *
+     * @param productId
+     * @param status
+     * @return
+     */
+    @Override
+    public ServerResponse<String> setSaleStatus(Integer productId, Integer status) {
+        if(productId == null || status == null) { // 参数不正确
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+
+        Product product = new Product();
+        product.setId(productId);
+        product.setStatus(status);
+        // 设置值
+        int rowCount = productMapper.updateByPrimaryKeySelective(product);
+        if(rowCount > 0) {
+            return ServerResponse.createBySuccessMessage("设置商品status成功");
+        }
+        return ServerResponse.createByErrorMessage("设置商品status失败");
     }
 }
