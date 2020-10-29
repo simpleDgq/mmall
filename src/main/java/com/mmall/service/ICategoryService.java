@@ -4,6 +4,7 @@ import com.mmall.common.ServerResponse;
 import com.mmall.pojo.Category;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ICategoryService {
 
@@ -29,4 +30,13 @@ public interface ICategoryService {
      * @return
      */
     ServerResponse<List<Category>> getChildrenParallelCategory(Integer parentId);
+
+
+    /**
+     * 查找指定id下面的分类信息，包括递归结果，比如，1 -> 10 -> 100,  如果id为1，返回的结果是10 和100
+     * @param categoryId
+     * @return
+     */
+    // 使用Set集合进行去重操作，注意需要重写Category的equals方法和hashCode方法
+    ServerResponse<List<Integer>> selectCategoryAndDeepChildrenCategory(Integer categoryId);
 }
