@@ -2,6 +2,7 @@ package com.mmall.service;
 
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.Product;
+import com.mmall.vo.ProductDetailsVo;
 
 public interface IProductService {
 
@@ -20,4 +21,13 @@ public interface IProductService {
      * @return
      */
     ServerResponse<String> setSaleStatus(Integer productId, Integer status);
+
+    /**
+     * 获取商品详细信息
+     *
+     * @param productId
+     * @return
+     */
+    ServerResponse<ProductDetailsVo> manageProductDetail(Integer productId);
+
 }
