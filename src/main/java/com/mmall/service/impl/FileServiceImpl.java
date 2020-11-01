@@ -44,7 +44,10 @@ public class FileServiceImpl implements IFileService {
             file.transferTo(targetFile); // 上传文件
             //文件已经上传到web服务器成功了
             // 上传文件到FTP服务器
-            FTPUtil.uploadFile(Arrays.asList(targetFile));
+            boolean uploaded =  FTPUtil.uploadFile(Arrays.asList(targetFile));
+            if(!uploaded) { // 上传文件到FTP 服务器异常
+                return null;
+            }
             // 删除web服务器upload文件夹下面的文件
             targetFile.delete();
         } catch (IOException e) {
