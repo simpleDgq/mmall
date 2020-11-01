@@ -184,7 +184,8 @@ public class ProductManageController {
      */
     @RequestMapping(value = "upload.do", method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse upload(HttpSession session, MultipartFile file, HttpServletRequest request) {
+    // @RequestParam(value = "upload_file", required = false)， upload_file和index.jsp中的input输入框的name对应
+    public ServerResponse upload(HttpSession session, @RequestParam(value = "upload_file", required = false) MultipartFile file, HttpServletRequest request) {
 
         // 校验用户是否登录
         User user = (User) session.getAttribute(Const.CURRENT_USER);
