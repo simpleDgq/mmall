@@ -59,4 +59,17 @@ public interface IProductService {
      */
     ServerResponse<ProductDetailsVo> getProductDetail(Integer productId);
 
+    /**
+     * 根据keyword或者categoryId搜索商品信息，并且分页
+     *
+     * @param keyword
+     * @param categoryId
+     * @param pageNum
+     * @param pageSize
+     * @param orderBy 根据price进行升序或者降序排列
+     * @return
+     */
+    ServerResponse<PageInfo> getProductByKeywordCategory(String keyword, Integer categoryId, Integer pageNum,
+                                                         Integer pageSize, String orderBy);
+
 }

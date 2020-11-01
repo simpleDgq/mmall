@@ -1,5 +1,9 @@
 package com.mmall.common;
 
+import com.google.common.collect.Sets;
+
+import java.util.Set;
+
 public class Const {
     public static final String CURRENT_USER = "currentUser";
 
@@ -16,6 +20,9 @@ public class Const {
         int ROLE_ADMIN = 1;
     }
 
+    /**
+     * 使用枚举来定义常量
+     */
     public enum ProductStatusEnum {
         ON_SALE(1,"在线");
         private int code;
@@ -34,4 +41,9 @@ public class Const {
             return value;
         }
     }
+
+    public interface ProductListOrderBy{
+        Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_desc","price_asc"); // guava
+    }
+
 }

@@ -9,6 +9,7 @@ import com.mmall.dao.CategoryMapper;
 import com.mmall.dao.ProductMapper;
 import com.mmall.pojo.Category;
 import com.mmall.pojo.Product;
+import com.mmall.service.ICategoryService;
 import com.mmall.service.IProductService;
 import com.mmall.util.DateTimeUtil;
 import com.mmall.util.PropertiesUtil;
@@ -30,6 +31,8 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     private CategoryMapper categoryMapper;
 
+    @Autowired
+    private ICategoryService iCategoryService;
     /**
      * 添加或者更新商品
      *
@@ -243,5 +246,61 @@ public class ProductServiceImpl implements IProductService {
         return ServerResponse.createBySuccess(productDetailVo);
     }
 
+    /**
+     * 根据keyword或者categoryId搜索商品信息，并且分页
+     *
+     * @param keyword
+     * @param categoryId
+     * @param pageNum
+     * @param pageSize
+     * @param orderBy
+     * @return
+     */
+    public ServerResponse<PageInfo> getProductByKeywordCategory(String keyword, Integer categoryId, Integer pageNum, Integer pageSize, String orderBy) {
+        if(StringUtils.isBlank(keyword) && categoryId == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        List<Integer> categoryIdList = new ArrayList<Integer>();
+
+        if(categoryId != null){
+            Category category = categoryMapper.selectByPrimaryKey(categoryId);
+            if(category == null && StringUtils.isBlank(keyword)){
+                //没有该分类,并且还没有关键字,这个时候返回一个空的结果集,不报错
+                PageHelper.startPage(pageNum,pageSize);
+                List<ProductListVo> productListVoList = new ArrayList<ProductListVo>();
+                PageInfo pageInfo = new PageInfo(productListVoList);
+                return ServerResponse.createBySuccess(pageInfo);
+            }
+            if(category != null) { // 递归获取查找指定id下面的分类信息，拿到指定的id下面所有的子节点的id list集合
+                categoryIdList = iCategoryService.selectCategoryAndDeepChildrenCategory(category.getId()).getData();
+            }
+        }
+        if(StringUtils.isNotBlank(keyword)){ // keyword 不是空
+            keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
+        }
+
+        PageHelper.startPage(pageNum,pageSize);
+        //排序处理
+        if(StringUtils.isNotBlank(orderBy)){
+            if(Const.ProductListOrderBy.PRICE_ASC_DESC.contains(orderBy)){
+                String[] orderByArray = orderBy.split("_");
+                PageHelper.orderBy(orderByArray[0]+" "+orderByArray[1]); // 拼凑出pageHelper要求的格式 "price asc"
+            }
+        }
+
+        // 根据keyword或者categoryIdList搜索商品信息，
+        List<Product> productList = productMapper.selectByNameAndCategoryIds(StringUtils.isBlank(keyword)?null:keyword,
+                    categoryIdList.size()==0?null:categoryIdList);
+
+        List<ProductListVo> productListVoList = new ArrayList<ProductListVo>();
+        for(Product product : productList){ // 填充productListVo对象，并且放到productListVoList中
+            ProductListVo productListVo = assembleProductListVo(product);
+            productListVoList.add(productListVo);
+        }
+
+        PageInfo pageInfo = new PageInfo(productList);
+        pageInfo.setList(productListVoList);
+        return ServerResponse.createBySuccess(pageInfo);
+    }
     // product portal end
 }

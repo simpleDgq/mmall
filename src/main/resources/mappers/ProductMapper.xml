@@ -197,4 +197,20 @@
       </if>
     </where>
   </select>
+
+  <select id="selectByNameAndCategoryIds" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from mmall_product
+    where status = 1
+    <if test="productName != null">
+      and name like #{keyword}
+    </if>
+    <if test="categoryIdList != null" >
+      and category_id in <!--sql语句遍历这个categoryIdList集合，取出每一个categoryId，查询出这个categoryId下面的product信息 -->
+      <foreach item="item" index="index" open="(" separator="," close=")" collection="categoryIdList">
+        #{item}
+      </foreach>
+    </if>
+  </select>
 </mapper>
