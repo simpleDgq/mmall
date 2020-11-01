@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
@@ -102,6 +103,34 @@ public class ProductManageController {
         }
 
         return iProductService.manageProductDetail(productId);
+    }
+
+
+    /**
+     * 分页查询商品列表信息
+     *
+     * @param session
+     * @param pageNum  页码
+     * @param pageSize 页大小
+     * @return
+     */
+    @RequestMapping(value = "get_product_list.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse getProductList(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                         @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+        // 校验用户是否登录
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
+        }
+
+        // 验证用户权限
+        ServerResponse response = iUserService.checkAdminRole(user);
+        if(!response.isSuccess()) {
+            return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
+        }
+
+        return iProductService.getProductList(pageNum, pageSize);
     }
 
 }

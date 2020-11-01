@@ -1,5 +1,6 @@
 package com.mmall.service;
 
+import com.github.pagehelper.PageInfo;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.Product;
 import com.mmall.vo.ProductDetailsVo;
@@ -29,5 +30,14 @@ public interface IProductService {
      * @return
      */
     ServerResponse<ProductDetailsVo> manageProductDetail(Integer productId);
+
+    /**
+     * 使用MyBatis pageHelper分页查询商品列表信息
+     *
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ServerResponse<PageInfo> getProductList(Integer pageNum, Integer pageSize);
 
 }

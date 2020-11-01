@@ -176,4 +176,11 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectProductList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from mmall_product
+    order by asc <!--在Sql后面不要加分号，因为pageHelper会通过AOP在该sql的后面直接加上limit 10 offset 1, 如果这里加上分后之后，就会出错 -->
+  </select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.mmall.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.dao.CategoryMapper;
@@ -10,9 +12,13 @@ import com.mmall.service.IProductService;
 import com.mmall.util.DateTimeUtil;
 import com.mmall.util.PropertiesUtil;
 import com.mmall.vo.ProductDetailsVo;
+import com.mmall.vo.ProductListVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service("iProductService")
 public class ProductServiceImpl implements IProductService {
@@ -134,5 +140,52 @@ public class ProductServiceImpl implements IProductService {
         productDetailVo.setCreateTime(DateTimeUtil.dateToStr(product.getCreateTime()));
         productDetailVo.setUpdateTime(DateTimeUtil.dateToStr(product.getUpdateTime()));
         return productDetailVo;
+    }
+
+
+    /**
+     * 使用MyBatis pageHelper分页查询商品列表信息
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    public ServerResponse<PageInfo> getProductList(Integer pageNum, Integer pageSize) {
+
+        // start helper page
+        PageHelper.startPage(pageNum, pageSize);
+        // 调用自己的sql语句
+        List<Product> productList = productMapper.selectProductList();
+        List<ProductListVo> productListVoList = new ArrayList<ProductListVo>();
+        for (Product productItem : productList) { // 填充productListVo对象
+            ProductListVo productListVo = assembleProductListVo(productItem);
+            productListVoList.add(productListVo);
+        }
+        // pageHelper收尾
+        PageInfo pageInfo = new PageInfo(productList); // pageHelper进行分页计算
+        pageInfo.setList(productListVoList); // 设置返回的list
+
+        return ServerResponse.createBySuccess(pageInfo);// 返回数据pageInfo
+    }
+
+
+    /**
+     * 填充ProductListVo对象
+     *
+     * @param product
+     * @return
+     */
+    private ProductListVo assembleProductListVo(Product product){
+        ProductListVo productListVo = new ProductListVo();
+        productListVo.setId(product.getId());
+        productListVo.setSubtitle(product.getSubtitle());
+        productListVo.setPrice(product.getPrice());
+        productListVo.setMainImage(product.getMainImage());
+        productListVo.setCategoryId(product.getCategoryId());
+        productListVo.setName(product.getName());
+        productListVo.setStatus(product.getStatus());
+        // 设置FTP服务器地址
+        productListVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix","http://img.happymmall.com/"));
+
+        return productListVo;
     }
 }
