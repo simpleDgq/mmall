@@ -188,4 +188,35 @@ public class ProductServiceImpl implements IProductService {
 
         return productListVo;
     }
+
+    /**
+     * 根据productName和productId搜索商品信息
+     *
+     * @param productName
+     * @param productId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    public ServerResponse<PageInfo> productSearch(String productName, Integer productId, Integer pageNum, Integer pageSize) {
+        // start helper page
+        PageHelper.startPage(pageNum, pageSize);
+        if(StringUtils.isNotBlank(productName)) {
+            productName = new StringBuilder().append("%").append(productName).append("%").toString();
+        }
+        // 调用自己的sql语句
+        List<Product> productList = productMapper.selectProductByNameAndId(productName, productId);
+
+        List<ProductListVo> productListVoList = new ArrayList<ProductListVo>();
+        for (Product productItem : productList) { // 填充productListVo对象
+            ProductListVo productListVo = assembleProductListVo(productItem);
+            productListVoList.add(productListVo);
+        }
+        // pageHelper收尾
+        PageInfo pageInfo = new PageInfo(productList); // pageHelper进行分页计算
+        pageInfo.setList(productListVoList); // 设置返回的list
+
+        return ServerResponse.createBySuccess(pageInfo);// 返回数据pageInfo
+
+    }
 }

@@ -133,4 +133,34 @@ public class ProductManageController {
         return iProductService.getProductList(pageNum, pageSize);
     }
 
+
+    /**
+     * 搜索商品信息
+     *
+     * @param session
+     * @param productName 根据productName搜索
+     * @param productId 根据productId搜索
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    @RequestMapping(value = "product_search.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse productSearch(HttpSession session, String productName, Integer productId, @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                         @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+        // 校验用户是否登录
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
+        }
+
+        // 验证用户权限
+        ServerResponse response = iUserService.checkAdminRole(user);
+        if(!response.isSuccess()) {
+            return ServerResponse.createByErrorMessage("无权限操作，需要管理员权限");
+        }
+
+        return iProductService.productSearch(productName, productId, pageNum, pageSize);
+    }
+
 }

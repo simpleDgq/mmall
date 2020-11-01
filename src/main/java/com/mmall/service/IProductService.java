@@ -40,4 +40,15 @@ public interface IProductService {
      */
     ServerResponse<PageInfo> getProductList(Integer pageNum, Integer pageSize);
 
+    /**
+     * 根据productName和productId搜索商品信息
+     *
+     * @param productName
+     * @param productId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ServerResponse<PageInfo> productSearch(String productName, Integer productId, Integer pageNum, Integer pageSize);
+
 }
