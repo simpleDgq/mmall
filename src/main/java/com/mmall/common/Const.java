@@ -46,4 +46,12 @@ public class Const {
         Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_desc","price_asc"); // guava
     }
 
+    public interface Cart {
+        int CHECKED = 1; // 购物车选中状态
+        int UN_CHECKED = 0; // 未选中状态
+
+        String LIMIT_NUMBER_FAIL = "LIMIT_NUMBER_FAIL"; // 库存数量小于购物车数量
+        String LIMIT_NUMBER_SUCCESS = "LIMIT_NUMBER_SUCCESS"; // 库存数量大于购物车数量
+    }
+
 }

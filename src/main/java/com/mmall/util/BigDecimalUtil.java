@@ -17,7 +17,7 @@ public class BigDecimalUtil {
      * 不会丢失精度的加法
      * @param v1
      * @param v2
-     * @return
+     * @retuq
      */
     public static BigDecimal add(double v1, double v2){
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
