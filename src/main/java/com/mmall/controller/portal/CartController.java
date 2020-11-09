@@ -96,7 +96,7 @@ public class CartController {
      * @param session
      * @return
      */
-    @RequestMapping(value = "select_all.do", method = RequestMethod.GET)
+    @RequestMapping(value = "select_all.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<CartVo> selectAll(HttpSession session) {
         // 校验用户是否登录
@@ -112,7 +112,7 @@ public class CartController {
      * @param session
      * @return
      */
-    @RequestMapping(value = "un_select_all.do", method = RequestMethod.GET)
+    @RequestMapping(value = "un_select_all.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<CartVo> unSelectAll(HttpSession session) {
         // 校验用户是否登录
@@ -129,7 +129,7 @@ public class CartController {
      * @param productId
      * @return
      */
-    @RequestMapping(value = "select.do", method = RequestMethod.GET)
+    @RequestMapping(value = "select.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<CartVo> select(HttpSession session, Integer productId) {
         // 校验用户是否登录
@@ -146,7 +146,7 @@ public class CartController {
      * @param productId
      * @return
      */
-    @RequestMapping(value = "un_select.do", method = RequestMethod.GET)
+    @RequestMapping(value = "un_select.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<CartVo> unSelect(HttpSession session, Integer productId) {
         // 校验用户是否登录
@@ -155,5 +155,21 @@ public class CartController {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
         }
         return iCartService.selectOrUnSelect(user.getId(), productId,  Const.Cart.UN_CHECKED);
+    }
+
+    /**
+     * 获取购物车中商品数量
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "get_cart_product_count.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<Integer> getCartProductCount(HttpSession session) {
+        // 校验用户是否登录
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createBySuccess(0);
+        }
+        return iCartService.getCartProductCount(user.getId());
     }
 }

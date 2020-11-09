@@ -160,6 +160,12 @@
     <if test="productId != null">
       and product_id = #{productId}
     </if>
-
   </update>
+
+  <select id="selectCartProductCount" parameterType="int" resultType="int">
+    select IFNULL(sum(quantity),0) as count <!--注意这里的IFNULL， 是为了避免查询不到信息，
+                                    sql语句会返回null，但是mapper中返回值为int，null没有办法转换为int。IFNULL，如果是null，则默认值是0 -->
+    from mmall_cart
+    where user_id = #{userId}
+  </select>
 </mapper>
