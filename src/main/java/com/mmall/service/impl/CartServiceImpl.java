@@ -57,8 +57,7 @@ public class CartServiceImpl implements ICartService {
             // 更新购物车数据库中该商品的数量
             cartMapper.updateByPrimaryKey(cart);
         }
-        CartVo cartVo = getCartVoLimit(userId);
-        return ServerResponse.createBySuccess(cartVo);
+        return  this.listProduct(userId);
     }
 
     /**
@@ -156,9 +155,7 @@ public class CartServiceImpl implements ICartService {
             cart.setQuantity(count);
         }
         cartMapper.updateByPrimaryKeySelective(cart);
-        CartVo cartVo = this.getCartVoLimit(userId);
-
-        return ServerResponse.createBySuccess(cartVo);
+        return  this.listProduct(userId);
     }
 
     /**
@@ -175,8 +172,29 @@ public class CartServiceImpl implements ICartService {
         // 删除操作
         cartMapper.deleteByUserIdAdnProductIds(userId, productIdList);
         // 从数据库中获取最新的信息
+        return  this.listProduct(userId);
+    }
+
+
+    /**
+     * 查询购物车中的商品信息
+     * @param userId
+     * @return
+     */
+    public ServerResponse<CartVo> listProduct(Integer userId) {
         CartVo cartVo = this.getCartVoLimit(userId);
         return ServerResponse.createBySuccess(cartVo);
+    }
+
+    /**
+     * 全选或不全选购物车中的商品
+     * @param userId
+     * @param checked
+     * @return
+     */
+    public ServerResponse<CartVo> selectOrUnSelect (Integer userId, Integer checked){
+        cartMapper.checkedOrUncheckedProduct(userId,checked);
+        return  this.listProduct(userId);
     }
 
 }

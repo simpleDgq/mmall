@@ -29,4 +29,19 @@ public interface ICartService {
      * @return
      */
     ServerResponse<CartVo> deleteProduct(Integer userId, String productIds);
+
+    /**
+     * 查询购物车中的商品信息
+     * @param userId
+     * @return
+     */
+    ServerResponse<CartVo> listProduct(Integer userId);
+
+    /**
+     * 全选或者不全选购物车中的商品
+     * @param userId
+     * @param checked
+     * @return
+     */
+    ServerResponse<CartVo> selectOrUnSelect (Integer userId,Integer checked);
 }

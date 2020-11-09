@@ -74,4 +74,52 @@ public class CartController {
         }
         return iCartService.deleteProduct(user.getId(), productIds);
     }
+
+    /**
+     * 查询购物车中的商品信息
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "list_product.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<CartVo> listProduct(HttpSession session) {
+        // 校验用户是否登录
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
+        }
+        return iCartService.listProduct(user.getId());
+    }
+
+    /**
+     * 购物车商品全选
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "select_all.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<CartVo> selectAll(HttpSession session) {
+        // 校验用户是否登录
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
+        }
+        return iCartService.selectOrUnSelect(user.getId(), Const.Cart.CHECKED);
+    }
+
+    /**
+     * 购物车商品全不选
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "un_select_all.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<CartVo> unSelectAll(HttpSession session) {
+        // 校验用户是否登录
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
+        }
+        return iCartService.selectOrUnSelect(user.getId(), Const.Cart.UN_CHECKED);
+    }
 }
