@@ -104,7 +104,7 @@ public class CartController {
         if(user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
         }
-        return iCartService.selectOrUnSelect(user.getId(), Const.Cart.CHECKED);
+        return iCartService.selectOrUnSelect(user.getId(), null, Const.Cart.CHECKED);
     }
 
     /**
@@ -120,6 +120,40 @@ public class CartController {
         if(user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
         }
-        return iCartService.selectOrUnSelect(user.getId(), Const.Cart.UN_CHECKED);
+        return iCartService.selectOrUnSelect(user.getId(), null,  Const.Cart.UN_CHECKED);
+    }
+
+    /**
+     * 选中单个商品
+     * @param session
+     * @param productId
+     * @return
+     */
+    @RequestMapping(value = "select.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<CartVo> select(HttpSession session, Integer productId) {
+        // 校验用户是否登录
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
+        }
+        return iCartService.selectOrUnSelect(user.getId(), productId,  Const.Cart.CHECKED);
+    }
+
+    /**
+     * 取消选中单个商品
+     * @param session
+     * @param productId
+     * @return
+     */
+    @RequestMapping(value = "un_select.do", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<CartVo> unSelect(HttpSession session, Integer productId) {
+        // 校验用户是否登录
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
+        }
+        return iCartService.selectOrUnSelect(user.getId(), productId,  Const.Cart.UN_CHECKED);
     }
 }

@@ -43,5 +43,5 @@ public interface ICartService {
      * @param checked
      * @return
      */
-    ServerResponse<CartVo> selectOrUnSelect (Integer userId,Integer checked);
+    ServerResponse<CartVo> selectOrUnSelect (Integer userId,Integer productId, Integer checked);
 }
