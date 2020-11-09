@@ -12,4 +12,13 @@ public interface ICartService {
      * @return
      */
     ServerResponse<CartVo> add(Integer userId, Integer productId, Integer count);
+
+    /**
+     * 更新购物车商品数量
+     * @param userId
+     * @param productId
+     * @param count
+     * @return
+     */
+    ServerResponse<CartVo> update(Integer userId, Integer productId, Integer count);
 }

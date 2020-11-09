@@ -13,11 +13,8 @@ import com.mmall.util.PropertiesUtil;
 import com.mmall.vo.CartProductVo;
 import com.mmall.vo.CartVo;
 import org.apache.commons.collections.CollectionUtils;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -138,6 +135,29 @@ public class CartServiceImpl implements ICartService {
             return false;
         }
         return cartMapper.selectCartProductCheckedStatusBuUserId(userId) == 0; // 全选状态
+    }
+
+    /**
+     * 更新购物车产品数量
+     * @param userId
+     * @param productId
+     * @param count
+     * @return
+     */
+    public ServerResponse<CartVo> update(Integer userId, Integer productId, Integer count) {
+        if(productId == null || count == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+
+        // 查询要更新的商品是不是存在
+        Cart cart = cartMapper.selectByUserIdProductId(userId, productId);
+        if(cart != null) {
+            cart.setQuantity(count);
+        }
+        cartMapper.updateByPrimaryKeySelective(cart);
+        CartVo cartVo = this.getCartVoLimit(userId);
+
+        return ServerResponse.createBySuccess(cartVo);
     }
 
 }
