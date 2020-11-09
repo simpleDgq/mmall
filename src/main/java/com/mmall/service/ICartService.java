@@ -21,4 +21,12 @@ public interface ICartService {
      * @return
      */
     ServerResponse<CartVo> update(Integer userId, Integer productId, Integer count);
+
+    /**
+     * 删除购物车中的商品
+     * @param userId
+     * @param productIds
+     * @return
+     */
+    ServerResponse<CartVo> deleteProduct(Integer userId, String productIds);
 }

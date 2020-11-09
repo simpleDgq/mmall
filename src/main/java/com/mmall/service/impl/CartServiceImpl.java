@@ -1,5 +1,6 @@
 package com.mmall.service.impl;
 
+import com.google.common.base.Splitter;
 import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
@@ -157,6 +158,24 @@ public class CartServiceImpl implements ICartService {
         cartMapper.updateByPrimaryKeySelective(cart);
         CartVo cartVo = this.getCartVoLimit(userId);
 
+        return ServerResponse.createBySuccess(cartVo);
+    }
+
+    /**
+     * 删除购物车中的产品
+     * @param userId
+     * @param productIds
+     * @return
+     */
+    public ServerResponse<CartVo> deleteProduct(Integer userId, String productIds) {
+        List<String> productIdList = Splitter.on(',').splitToList(productIds); // guava
+        if(CollectionUtils.isEmpty(productIdList)) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        // 删除操作
+        cartMapper.deleteByUserIdAdnProductIds(userId, productIdList);
+        // 从数据库中获取最新的信息
+        CartVo cartVo = this.getCartVoLimit(userId);
         return ServerResponse.createBySuccess(cartVo);
     }
 

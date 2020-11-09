@@ -40,6 +40,13 @@ public class CartController {
         return iCartService.add(user.getId(), productId, count);
     }
 
+    /**
+     * 更新购物车产品数量
+     * @param session
+     * @param count
+     * @param productId
+     * @return
+     */
     @RequestMapping(value = "update.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<CartVo> update(HttpSession session, Integer count, Integer productId) {
@@ -49,5 +56,22 @@ public class CartController {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
         }
         return iCartService.update(user.getId(), productId, count);
+    }
+
+    /**
+     * 删除购物车产品
+     * @param session
+     * @param productIds 支持删除多个，id用逗号分隔。例如：1001,1002
+     * @return
+     */
+    @RequestMapping(value = "delete_product.do", method = RequestMethod.DELETE)
+    @ResponseBody
+    public ServerResponse<CartVo> deleteProduct(HttpSession session, String productIds) {
+        // 校验用户是否登录
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
+        }
+        return iCartService.deleteProduct(user.getId(), productIds);
     }
 }
