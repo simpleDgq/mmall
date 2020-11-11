@@ -1,5 +1,6 @@
 package com.mmall.service;
 
+import com.github.pagehelper.PageInfo;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.Shipping;
 
@@ -35,4 +36,13 @@ public interface IShippingService {
      * @return
      */
     ServerResponse<Shipping> select(Integer userId, Integer shippingId);
+
+    /**
+     * 分页查询地址信息
+     * @param userId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ServerResponse<PageInfo> list(Integer userId, int pageNum, int pageSize);
 }

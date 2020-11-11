@@ -209,4 +209,11 @@
     where user_id = #{userId}
     and id = #{shippingId}
   </select>
+
+  <select id="selectByUserId" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from mmall_shipping
+    where user_id = #{userId}
+  </select>
 </mapper>
