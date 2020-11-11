@@ -101,7 +101,7 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        now(),
+        update_time = now(),
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -144,7 +144,7 @@
     delete
     from mmall_cart
     where user_id =#{userId}
-    and prodcut_id in
+    and product_id in
     <if test="productIdList != null">
       <foreach collection="productIdList" close=")" open="(" separator="," index="index" item="item">
         #{item}

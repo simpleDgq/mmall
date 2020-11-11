@@ -3,7 +3,6 @@ package com.mmall.controller.portal;
 import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
-import com.mmall.dao.CartMapper;
 import com.mmall.pojo.User;
 import com.mmall.service.ICartService;
 import com.mmall.vo.CartVo;
@@ -37,7 +36,8 @@ public class CartController {
         if(user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
         }
-        return iCartService.add(user.getId(), productId, count);
+        ServerResponse<CartVo> response = iCartService.add(user.getId(), productId, count);
+        return response.getData() == null ? ServerResponse.<CartVo>createByErrorMessage("商品不存在") : response;
     }
 
     /**
@@ -136,6 +136,9 @@ public class CartController {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if(user == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录，请登录");
+        }
+        if(productId == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
         return iCartService.selectOrUnSelect(user.getId(), productId,  Const.Cart.CHECKED);
     }

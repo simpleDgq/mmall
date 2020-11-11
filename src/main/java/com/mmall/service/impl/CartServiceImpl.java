@@ -107,14 +107,17 @@ public class CartServiceImpl implements ICartService {
                     cartProductVo.setProductTotalPrice(BigDecimalUtil.mul(product.getPrice().doubleValue(),
                             buyLimitCount));
                     cartProductVo.setProductChecked(cartItem.getChecked());
-                }
-                if(cartItem.getChecked() == Const.Cart.CHECKED) {
-                    // 计算勾选的物品的总价
-                    cartTotalPrice = BigDecimalUtil.add(cartTotalPrice.doubleValue(),
-                            cartProductVo.getProductTotalPrice().doubleValue());
-                }
 
-                cartProductVoList.add(cartProductVo);
+                    if(cartItem.getChecked() == Const.Cart.CHECKED) {
+                        // 计算勾选的物品的总价
+                        cartTotalPrice = BigDecimalUtil.add(cartTotalPrice.doubleValue(),
+                                cartProductVo.getProductTotalPrice().doubleValue());
+                    }
+
+                    cartProductVoList.add(cartProductVo);
+                } else {
+                    return null; // 如果要添加到购物车的商品，在product中不存在
+                }
             }
             cartVo.setCartProductVoList(cartProductVoList);
             cartVo.setCartTotalPrice(cartTotalPrice);
