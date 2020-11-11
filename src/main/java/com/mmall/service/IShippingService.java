@@ -20,4 +20,19 @@ public interface IShippingService {
      */
     ServerResponse<String> del(Integer userId,Integer shippingId);
 
+    /**
+     * 更新地址
+     * @param userId
+     * @param shipping
+     * @return
+     */
+    ServerResponse update(Integer userId, Shipping shipping);
+
+    /**
+     * 查询地址信息
+     * @param userId
+     * @param shippingId
+     * @return
+     */
+    ServerResponse<Shipping> select(Integer userId, Integer shippingId);
 }

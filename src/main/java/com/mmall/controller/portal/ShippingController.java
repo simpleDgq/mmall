@@ -54,4 +54,30 @@ public class ShippingController {
         return iShippingService.del(user.getId(),shippingId);
     }
 
+    /**
+     * 更新地址
+     * @param session
+     * @param shipping
+     * @return
+     */
+    @RequestMapping("update.do")
+    @ResponseBody
+    public ServerResponse update(HttpSession session,Shipping shipping){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user ==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iShippingService.update(user.getId(),shipping);
+    }
+
+    @RequestMapping("select.do")
+    @ResponseBody
+    public ServerResponse<Shipping> select(HttpSession session,Integer shippingId){
+        User user = (User)session.getAttribute(Const.CURRENT_USER);
+        if(user ==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iShippingService.select(user.getId(),shippingId);
+    }
+
 }
