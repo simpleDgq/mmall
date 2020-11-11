@@ -181,7 +181,7 @@
   <delete id="deleteByShippingIdUserId" parameterType="map">
     delete from mmall_shipping
     where user_id = #{userId}
-    and shipping_id = #{shippingId}
+    and id = #{shippingId}
   </delete>
 
 
@@ -202,11 +202,11 @@
     and user_id = #{userId,jdbcType=INTEGER}
   </update>
 
-  <select id="selectByShippingIdUserId" parameterType="map" resultType="com.mmall.pojo.Shipping">
+  <select id="selectByShippingIdUserId" parameterType="map" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"></include>
     from mmall_shipping
     where user_id = #{userId}
-    and shipping_id = #{shippingId}
+    and id = #{shippingId}
   </select>
 </mapper>
