@@ -116,4 +116,56 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+  <select id="selectByUserIdProductId" resultMap="BaseResultMap" parameterType="map">
+    select
+    <include refid="Base_Column_List"></include>
+    from mmall_cart
+    where user_id = #{userId}
+    and product_id = #{productId}
+  </select>
+
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="int">
+    select
+    <include refid="Base_Column_List"></include>
+    from mmall_cart
+    where user_id = #{userId}
+  </select>
+
+  <select id="selectCartProductCheckedStatusBuUserId" parameterType="int" resultType="int" >
+    select count(1)
+    from mmall_cart
+    where checked = 0
+    and user_id = #{userId}
+  </select>
+
+  <delete id="deleteByUserIdAdnProductIds" parameterType="map">
+    delete
+    from mmall_cart
+    where user_id =#{userId}
+    and prodcut_id in
+    <if test="productIdList != null">
+      <foreach collection="productIdList" close=")" open="(" separator="," index="index" item="item">
+        #{item}
+      </foreach>
+    </if>
+  </delete>
+
+  <update id="checkedOrUncheckedProduct" parameterType="map">
+    update mmall_cart
+    set checked = #{checked},
+    update_time = now()
+    where user_id = #{userId}
+    <if test="productId != null">
+      and product_id = #{productId}
+    </if>
+  </update>
+
+  <select id="selectCartProductCount" parameterType="int" resultType="int">
+    select IFNULL(sum(quantity),0) as count <!--注意这里的IFNULL， 是为了避免查询不到信息，
+                                    sql语句会返回null，但是mapper中返回值为int，null没有办法转换为int。IFNULL，如果是null，则默认值是0 -->
+    from mmall_cart
+    where user_id = #{userId}
+  </select>
 </mapper>
