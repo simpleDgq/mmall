@@ -230,4 +230,21 @@ public class OrderServiceImpl implements IOrderService {
         return ServerResponse.createBySuccess();
     }
 
+    /**
+     * 查询订单支付状态
+     * @param userId
+     * @param orderNo
+     * @return
+     */
+    public ServerResponse queryOrderPayStatus(Integer userId,Long orderNo){
+        Order order = orderMapper.selectByUserIdAndOrderNo(userId,orderNo);
+        if(order == null){
+            return ServerResponse.createByErrorMessage("用户没有该订单");
+        }
+        if(order.getStatus() >= Const.OrderStatusEnum.PAID.getCode()){ // 如果订单状态不是已取消或者已支付，则代表订单成功，否则失败
+            return ServerResponse.createBySuccess();
+        }
+        return ServerResponse.createByError();
+    }
+
 }

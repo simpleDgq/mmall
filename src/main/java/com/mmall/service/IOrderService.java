@@ -21,4 +21,12 @@ public interface IOrderService {
      * @return
      */
     ServerResponse aliCallback(Map<String,String> params);
+
+    /**
+     * 查询订单支付状态
+     * @param userId
+     * @param orderId
+     * @return
+     */
+    ServerResponse queryOrderPayStatus(Integer userId, Long orderId);
 }
